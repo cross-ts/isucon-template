@@ -18,5 +18,3 @@
       apt:
         name: percona-toolkit
         update_cache: true
-  notify:
-    - deploy alp.yml
