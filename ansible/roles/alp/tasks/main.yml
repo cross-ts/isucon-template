@@ -24,3 +24,10 @@
       unarchive:
         <<: *alp
         src: "{{ download_url }}/{{ version }}/alp_linux_arm64.zip"
+
+- name: deploy alp.yml
+  become: false
+  copy:
+    src: alp.yml
+    dest: ./
+    force: false

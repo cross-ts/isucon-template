@@ -1,5 +1,0 @@
-- name: deploy alp.yml
-  become: false
-  copy:
-    src: alp.yml
-    dest: ./
