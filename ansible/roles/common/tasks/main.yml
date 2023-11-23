@@ -7,3 +7,12 @@
     - jq
     - rsync
     - tig
+
+- name: deploy utility files
+  become: false
+  copy:
+    src: "{{ item }}"
+    dest: ./
+    force: false
+  with_items:
+    - Makefile
