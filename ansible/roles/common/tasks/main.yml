@@ -3,5 +3,7 @@
     name: "{{ item }}"
   with_items:
     - git
-    - tig
+    - htop
+    - jq
     - rsync
+    - tig
