@@ -2,3 +2,4 @@
   become: true
   roles:
     - alp
+    - pt-query-digest

@@ -1,0 +1,19 @@
+- name: Check pt-query-digest installed
+  command: pt-query-digest
+  register: pt_installed
+  ignore_errors: true
+
+- name: Install pt-query-digest
+  when: pt_installed is failed
+  block:
+    # percona-releaseなしでも取得可能だが最新版を使用したい
+    - name: Install percona-release
+      apt:
+        deb: https://repo.percona.com/apt/percona-release_latest.generic_all.deb
+    - name: Setup pt
+      command: percona-release enable pt
+
+    - name: Install percona-toolkit
+      apt:
+        name: percona-toolkit
+        update_cache: true
