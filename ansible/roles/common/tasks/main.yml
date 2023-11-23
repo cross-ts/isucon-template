@@ -1,4 +1,4 @@
-- name: Install utilities
+- name: install utilities
   apt:
     name: "{{ item }}"
   with_items:
