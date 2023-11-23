@@ -1,5 +1,5 @@
 - name: Check pt-query-digest installed
-  command: pt-query-digest
+  command: which pt-query-digest
   register: pt_installed
   ignore_errors: true
 
