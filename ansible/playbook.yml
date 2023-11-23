@@ -3,4 +3,5 @@
   roles:
     - common
     - alp
+    - mysqldef
     - pt-query-digest
