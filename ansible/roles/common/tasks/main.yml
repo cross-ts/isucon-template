@@ -1,0 +1,7 @@
+- name: Install utilities
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - git
+    - tig
+    - rsync
