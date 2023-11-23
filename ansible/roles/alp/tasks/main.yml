@@ -1,4 +1,4 @@
-- name: Check alp executable
+- name: Check alp installed
   command: which alp
   register: alp_installed
   ignore_errors: true
