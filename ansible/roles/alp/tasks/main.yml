@@ -1,0 +1,26 @@
+- name: Check alp executable
+  command: which alp
+  register: alp_installed
+  ignore_errors: true
+
+- name: Install alp
+  when: alp_installed is failed
+  block:
+    - name: Check system architecture
+      command: uname -m
+      register: architecture
+
+    # TODO: varsをいい感じにして変数名の動的選択で解決したい
+    - name: (x86_64) Install alp
+      when: architecture.stdout == "x86_64"
+      unarchive: &alp
+        src: "{{ download_url }}/{{ version }}/alp_linux_amd64.zip"
+        dest: /usr/local/bin
+        remote_src: true
+        mode: 0755
+
+    - name: (arm64) Install alp
+      when: architecture.stdout == "arm64"
+      unarchive:
+        <<: *alp
+        src: "{{ download_url }}/{{ version }}/alp_linux_arm64.zip"
