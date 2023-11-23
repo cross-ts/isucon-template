@@ -1,0 +1,14 @@
+# Ignore based private-isu
+.ansible
+.bash_history
+.bash_logout
+.bashrc
+.cache
+.config
+.local
+.profile
+.ssh
+.viminfo
+.xbuild
+backup
+go

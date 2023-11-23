@@ -16,3 +16,4 @@
     force: false
   with_items:
     - Makefile
+    - .gitignore
