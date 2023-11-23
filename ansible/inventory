@@ -1,0 +1,7 @@
+[all]
+isucon1
+isucon2
+isucon3
+
+[all:vars]
+ansible_ssh_user=isucon
