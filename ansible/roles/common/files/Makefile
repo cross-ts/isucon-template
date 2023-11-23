@@ -20,7 +20,7 @@ init:
 	@sudo touch $(MYSQL_SLOW_LOG_FILE)
 	@sudo chmod 777 $(NGINX_LOG_FILE)
 	@sudo chmod 777 $(MYSQL_SLOW_LOG_FILE)
-	@mysqldef -u $(MYSQL_USER) -p $(MYSQL_PWD) -h $(MYSQL_HOST) --file $(MYSQL_SCHEMA_FILE) --export $(MYSQL_DB)
+	@mysqldef -u $(MYSQL_USER) -p $(MYSQL_PWD) -h $(MYSQL_HOST) --export $(MYSQL_DB) | tee $(MYSQL_SCHEMA_FILE)
 
 .PHONY: alp
 alp:
@@ -32,7 +32,7 @@ pt:
 
 .PHONY: migrate
 migrate:
-	@mysqldef -u $(MYSQL_USER) -p $(MYSQL_PWD) -h $(MYSQL_HOST) --file $(MYSQL_SCHEMA_FILE) $(MYSQL_DB) | tee migrate.log
+	@mysqldef -u $(MYSQL_USER) -p $(MYSQL_PWD) -h $(MYSQL_HOST) --file $(MYSQL_SCHEMA_FILE) $(MYSQL_DB)
 
 .PHONY: clean
 clean:
