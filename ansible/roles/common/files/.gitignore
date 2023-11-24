@@ -8,6 +8,7 @@
 .local
 .profile
 .ssh
+.tig_history
 .viminfo
 .xbuild
 backup
