@@ -14,6 +14,7 @@ SERVER3 := isucon3
 #
 APP_SERVER := $(SERVER1)
 DB_SERVER := $(SERVER1)
+
 MYSQL_USER := $(ISUCON_USER)
 MYSQL_PWD := $(ISUCON_USER)
 MYSQL_HOST := localhost
@@ -30,16 +31,32 @@ init:
 
 .PHONY: alp
 alp:
+	@rsync -avz alp.yml $(APP_SERVER):./alp.yml
 	@ssh $(APP_SERVER) 'make alp-local' | tee alp.log
 
 .PHONY: pt
 pt:
 	@ssh $(DB_SERVER) 'make pt-local' | tee pt.log
 
+# FIXME:
+#   * rsyncでファイルを送るとgitのdiffが出て面倒
+# TODO:
+#   * migrate-localを実行しないようにssh localport forwardを使いたい
 .PHONY: migrate
 migrate:
 	@rsync -avz $(MYSQL_SCHEMA_FILE) $(DB_SERVER):$(MYSQL_SCHEMA_FILE)
 	@ssh $(DB_SERVER) 'make migrate-local'
+
+.PHONY: build
+build:
+	@cd webapp/go && \
+		go mod tidy && \
+		GOOS=linux GOARCH=amd64 go build -o app
+
+.PHONY: deploy
+deploy: build migrate
+	@rsync -avz webapp/go/app $(APP_SERVER):./webapp/go/app
+	@ssh $(APP_SERVER) 'sudo systemctl restart isucon.go.service'
 
 .PHONY: clean
 clean:
