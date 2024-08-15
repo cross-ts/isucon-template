@@ -1,29 +1,10 @@
-- name: check alp installed
-  command: which alp
-  register: alp_installed
-  ignore_errors: true
-
-- name: install alp
-  when: alp_installed is failed
-  block:
-    - name: check system architecture
-      command: uname -m
-      register: architecture
-
-    # TODO: varsをいい感じにして変数名の動的選択で解決したい
-    - name: install alp(x86_64)
-      when: architecture.stdout == "x86_64"
-      unarchive: &alp
-        src: "{{ download_url }}/{{ version }}/alp_linux_amd64.zip"
-        dest: /usr/local/bin
-        remote_src: true
-        mode: 0755
-
-    - name: install alp(arm64)
-      when: architecture.stdout == "arm64"
-      unarchive:
-        <<: *alp
-        src: "{{ download_url }}/{{ version }}/alp_linux_arm64.zip"
+- name: install alp for {{ arch[ansible_architecture] }}
+  unarchive:
+    src: "{{ download_url }}/{{ version }}/alp_linux_{{ arch[ansible_architecture] }}.tar.gz"
+    dest: /usr/local/bin
+    creates: /usr/local/bin/alp
+    remote_src: true
+    mode: 0755
 
 - name: deploy alp.yml
   become: false
