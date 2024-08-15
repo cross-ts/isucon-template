@@ -3,20 +3,5 @@
   register: pt_installed
   ignore_errors: true
 
-- name: install pt-query-digest
+- include_tasks: "{{ ansible_os_family | lower }}.yml"
   when: pt_installed is failed
-  block:
-    - name: import percona gpg key
-      rpm_key:
-        key: https://repo.percona.com/yum/RPM-GPG-KEY
-        state: present
-    - name: install percona-release
-      dnf:
-        name: https://repo.percona.com/yum/percona-release-latest.noarch.rpm
-        state: present
-    - name: setup pt
-      command: percona-release enable pt
-    - name: install percona-toolkit
-      dnf:
-        name: percona-toolkit
-        state: present
