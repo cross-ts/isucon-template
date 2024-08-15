@@ -1,6 +1,6 @@
 - hosts: all
   become: true
   roles:
-    - alp
-    - mysqldef
-    - percona-toolkit
+    - cli/alp
+    - cli/mysqldef
+    - cli/percona-toolkit
