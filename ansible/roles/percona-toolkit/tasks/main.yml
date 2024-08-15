@@ -6,12 +6,17 @@
 - name: install pt-query-digest
   when: pt_installed is failed
   block:
+    - name: import percona gpg key
+      rpm_key:
+        key: https://repo.percona.com/yum/RPM-GPG-KEY
+        state: present
     - name: install percona-release
-      apt:
-        deb: https://repo.percona.com/apt/percona-release_latest.generic_all.deb
+      dnf:
+        name: https://repo.percona.com/yum/percona-release-latest.noarch.rpm
+        state: present
     - name: setup pt
       command: percona-release enable pt
     - name: install percona-toolkit
-      apt:
+      dnf:
         name: percona-toolkit
-        update_cache: true
+        state: present
