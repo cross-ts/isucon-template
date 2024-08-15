@@ -10,7 +10,6 @@
       command: uname -m
       register: architecture
 
-    # TODO: varsをいい感じにして変数名の動的選択で解決したい
     - name: install mysqldef(x86_64)
       when: architecture.stdout == "x86_64"
       unarchive: &mysqldef

@@ -1,7 +1,6 @@
 - hosts: all
   become: true
   roles:
-    - common
     - alp
     - mysqldef
-    - pt-query-digest
+    - percona-toolkit

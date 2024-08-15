@@ -6,14 +6,11 @@
 - name: install pt-query-digest
   when: pt_installed is failed
   block:
-    # percona-releaseなしでも取得可能だが最新版を使用したい
     - name: install percona-release
       apt:
         deb: https://repo.percona.com/apt/percona-release_latest.generic_all.deb
-
     - name: setup pt
       command: percona-release enable pt
-
     - name: install percona-toolkit
       apt:
         name: percona-toolkit
