@@ -4,7 +4,7 @@
     - never
 
 - become: false
-  synchronize:
+  copy:
     src: .config/git
     dest: ~/.config/
     force: false
