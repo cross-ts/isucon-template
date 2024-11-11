@@ -2,6 +2,12 @@
   command: which pt-query-digest
   register: pt_installed
   ignore_errors: true
+  tags:
+    - init
+    - never
 
 - include_tasks: "{{ ansible_os_family | lower }}.yml"
   when: pt_installed is failed
+  tags:
+    - init
+    - never
