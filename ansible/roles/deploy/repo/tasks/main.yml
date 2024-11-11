@@ -7,7 +7,7 @@
     - init
     - never
 
-- ansible.builtin.git:
+- git:
     repo: "{{ git_remote_url.stdout }}"
     dest: "{{ git_remote_url.stdout | basename }}"
     accept_hostkey: true
