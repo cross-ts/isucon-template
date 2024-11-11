@@ -1,0 +1,5 @@
+- ansible.posix.selinux:
+    state: disabled
+  tags:
+    - init
+    - never

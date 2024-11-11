@@ -6,3 +6,4 @@
     - install/mysqldef
     - install/percona-toolkit
     - install/tig
+    - setting/disable-selinux
