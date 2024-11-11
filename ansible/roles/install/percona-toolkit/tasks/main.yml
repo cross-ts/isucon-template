@@ -3,11 +3,11 @@
   register: pt_installed
   ignore_errors: true
   tags:
-    - init
+    - install
     - never
 
 - include_tasks: "{{ ansible_os_family | lower }}.yml"
   when: pt_installed is failed
   tags:
-    - init
+    - install
     - never

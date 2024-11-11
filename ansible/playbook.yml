@@ -1,8 +1,8 @@
 - hosts: all
   become: true
   roles:
-    - cli/alp
-    - cli/htop
-    - cli/mysqldef
-    - cli/percona-toolkit
-    - cli/tig
+    - install/alp
+    - install/htop
+    - install/mysqldef
+    - install/percona-toolkit
+    - install/tig

@@ -1,5 +1,5 @@
 .PHONY: init
 init:
 	@ansible-playbook \
-		--tags init \
+		--tags install \
 		ansible/playbook.yml
