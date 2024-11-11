@@ -1,0 +1,6 @@
+- ansible.builtin.git:
+    repo: ssh://git@github.com/cross-ts/isucon-tools.git
+    dest: ./
+  tags:
+    - init
+    - never
