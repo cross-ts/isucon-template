@@ -8,13 +8,3 @@
   tags:
     - install
     - never
-
-- name: deploy alp.yml
-  become: false
-  copy:
-    src: alp.yml
-    dest: ./
-    force: false
-  tags:
-    - install
-    - never
