@@ -2,5 +2,7 @@
   become: true
   roles:
     - cli/alp
+    - cli/htop
     - cli/mysqldef
     - cli/percona-toolkit
+    - cli/tig
