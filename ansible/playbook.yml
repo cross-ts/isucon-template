@@ -2,6 +2,7 @@
   become: true
   roles:
     - install/alp
+    - install/git
     - install/htop
     - install/mysqldef
     - install/percona-toolkit

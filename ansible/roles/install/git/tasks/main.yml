@@ -1,0 +1,13 @@
+- include_tasks: "{{ ansible_os_family | lower }}.yml"
+  tags:
+    - install
+    - never
+
+- become: false
+  synchronize:
+    src: .config/git
+    dest: ~/.config/
+    force: false
+  tags:
+    - install
+    - never
