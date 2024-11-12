@@ -6,7 +6,12 @@
     - install
     - never
 
-- include_tasks: "{{ ansible_os_family | lower }}.yml"
+- include_tasks:
+    file: "{{ ansible_os_family | lower }}.yml"
+    apply:
+      tags:
+        - install
+        - never
   when: pt_installed is failed
   tags:
     - install

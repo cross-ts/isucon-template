@@ -1,4 +1,9 @@
-- include_tasks: "{{ ansible_os_family | lower }}.yml"
+- include_tasks:
+    file: "{{ ansible_os_family | lower }}.yml"
+    apply:
+      tags:
+        - install
+        - never
   tags:
     - install
     - never
