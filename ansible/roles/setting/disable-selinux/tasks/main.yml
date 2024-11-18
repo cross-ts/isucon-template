@@ -1,5 +1,6 @@
 - ansible.posix.selinux:
     state: disabled
+  ignore_errors: true
   tags:
     - init
     - never
