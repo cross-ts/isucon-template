@@ -1,0 +1,16 @@
+- name: Disable AppArmor
+  command: aa-teardown
+  ignore_errors: true
+  tags:
+    - install
+    - never
+
+- name: Stop AppArmor service
+  service:
+    name: apparmor
+    state: stopped
+    enabled: false
+  ignore_errors: true
+  tags:
+    - install
+    - never
