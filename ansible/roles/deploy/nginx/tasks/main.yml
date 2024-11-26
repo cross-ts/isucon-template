@@ -5,7 +5,7 @@
     recursive: true
     use_ssh_args: true
     delete: false
-  notify: Reload nginx
+  notify: reload nginx
   tags:
     - deploy
     - never
