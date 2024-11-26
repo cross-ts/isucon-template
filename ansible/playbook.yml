@@ -1,4 +1,4 @@
-- hosts: all
+- hosts: init
   become: true
   roles:
     - install/alp
@@ -10,3 +10,8 @@
     - setting/disable-apparmor
     - setting/disable-selinux
     - deploy/repo
+
+- hosts: webapp
+  become: true
+  roles:
+    - deploy/nginx
