@@ -1,0 +1,5 @@
+- name: reload mysql
+  systemd_service:
+    name: mysql
+    state: restarted
+    enabled: true

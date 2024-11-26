@@ -1,0 +1,11 @@
+- name: Deploy MySQL conf
+  synchronize:
+    src: "{{ playbook_dir }}/../mysql/"
+    dest: /etc/mysql/
+    recursive: true
+    use_ssh_args: true
+    delete: false
+  notify: reload mysql
+  tags:
+    - deploy
+    - never

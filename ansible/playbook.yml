@@ -16,3 +16,8 @@
   become: true
   roles:
     - deploy/nginx
+
+- hosts: db
+  become: true
+  roles:
+    - deploy/mysql
