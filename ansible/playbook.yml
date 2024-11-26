@@ -7,6 +7,7 @@
     - install/mysqldef
     - install/percona-toolkit
     - install/tig
+    - install/valkey
     - setting/disable-apparmor
     - setting/disable-selinux
     - deploy/repo
