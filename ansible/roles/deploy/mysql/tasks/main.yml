@@ -7,5 +7,6 @@
     delete: false
   notify: reload mysql
   tags:
+    - init
     - deploy
     - never

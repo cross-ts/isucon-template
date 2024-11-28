@@ -11,6 +11,9 @@
     - setting/disable-apparmor
     - setting/disable-selinux
     - deploy/repo
+    - deploy/nginx
+    - deploy/mysql
+    - deploy/webapp
 
 - hosts: webapp
   become: true

@@ -7,5 +7,6 @@
     delete: false
   notify: reload nginx
   tags:
+    - init
     - deploy
     - never
