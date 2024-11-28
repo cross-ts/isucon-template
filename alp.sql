@@ -1,10 +1,12 @@
-create or replace macro normalize_path(path) as regexp_replace(
-  path, '\d+', '<id>'
+create or replace macro req2path(req) as (
+  split_part(req, ' ', 2)
+    .regexp_replace('\?.+$', '?<query>')
+    .regexp_replace('[0-9]+', '[0-9]+')
+    .regexp_replace('\@[a-z]+', '@[a-z]+')
 );
-
 select
   count(1) as count,
-  normalize_path(split_part(req, ' ', 2)) as path,
+  req2path(req) as path,
   count(1) filter (left(status::varchar, 1) == '1') as '100',
   count(1) filter (left(status::varchar, 1) == '2') as '200',
   count(1) filter (left(status::varchar, 1) == '3') as '300',
