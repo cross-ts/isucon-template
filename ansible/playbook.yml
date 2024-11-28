@@ -16,6 +16,7 @@
   become: true
   roles:
     - deploy/nginx
+    - deploy/webapp
 
 - hosts: db
   become: true

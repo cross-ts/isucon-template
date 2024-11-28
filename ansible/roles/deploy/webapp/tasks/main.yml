@@ -1,0 +1,11 @@
+- name: Ddeploy webapp
+  synchronize:
+    src: "{{ playbook_dir }}/../webapp/"
+    dest: "/home/{{ ansible_user }}/webapp/"
+    recursive: true
+    use_ssh_args: true
+    delete: false
+  #notify: restart webapp
+  tags:
+    - deploy
+    - never
