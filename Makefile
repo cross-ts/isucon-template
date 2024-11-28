@@ -18,9 +18,16 @@ cdk/node_modules:
 	@cd cdk && npm ci
 
 .PHONY: prepare
-.ONESHELL:
+.ONESHELL: prepare
 prepare: cdk/node_modules
-	@cd cdk && pwd
+	@cd cdk
+	@npx cdk deploy --require-approval never
+
+.PHONY: prepare-destructive
+.ONESHELL: prepare-destructive
+prepare-destructive: cdk/node_modules
+	@cd cdk
+	@npx cdk destroy --force
 
 ###############
 # Setup Tasks #
@@ -65,4 +72,4 @@ slow.log.gz:
 
 .PHONY: pt-query-digest
 pt-query-digest:
-	@gzcat slow.log.gz | pt-query-digest
+	@gzcat slow.log.gz | pt-query-digest --output json | tail -n +2
