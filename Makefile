@@ -1,3 +1,6 @@
+###########
+# Prepare #
+###########
 .PHONY: init
 init:
 	@ansible-playbook \
@@ -8,7 +11,7 @@ init:
 ##########
 # ISUCON #
 ##########
-RSYNC_CMD := rsync -e "ssh -F $(CURDIR)/.ssh/config" --rsync-path "sudo rsync"
+RSYNC := rsync -e "ssh -F $(CURDIR)/.ssh/config" --rsync-path "sudo rsync"
 WEBAPP := isucon1
 DB := isucon1
 
