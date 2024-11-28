@@ -1,15 +1,7 @@
 default: help
 .PHONY: help
 help:
-	@echo "Usage: make [target]"
-	@echo
-	@echo "Targets:"
-	@echo "  prepare  Install dependencies"
-	@echo "  init     Initialize environment"
-	@echo "  deploy   Deploy application"
-	@echo "  bench    Run benchmark"
-	@echo "  alp      Analyze access log"
-	@echo "  pt-query-digest  Analyze slow query log"
+	@echo "TODO: Write help message"
 
 #################
 # Prepare Tasks #
