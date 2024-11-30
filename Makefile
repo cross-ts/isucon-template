@@ -7,7 +7,6 @@ help:
 # Preparation #
 ###############
 LOG_BUCKET = $(shell aws cloudformation describe-stacks --stack-name ProfilerStack --query 'Stacks[0].Outputs[?ExportName==`LogBucketName`].OutputValue' --output text)
-
 .PHONY: cdk-deploy
 .ONESHELL: cdk-deploy
 cdk-deploy:
@@ -24,37 +23,28 @@ cdk-destroy:
 		--require-approval never \
 		--no-lookups
 
-.PHONY: debug
-debug:
-	@echo $(LOG_BUCKET)
-
-###############
-# Setup Tasks #
-###############
-.PHONY: init
-init:
-	@ansible-playbook \
-		-l init \
-		--tags init,install \
-		ansible/playbook.yml
-
 ##########
 # ISUCON #
 ##########
+.PHONY: init
+init:
+	@ansible-playbook -l all ansible/init.yml
+
 RSYNC := rsync -e "ssh -F $(CURDIR)/.ssh/config" --rsync-path "sudo rsync"
 WEBAPP := isucon1
 DB := isucon1
 
 .PHONY: deploy
 deploy:
-	@ansible-playbook \
-		-l webapp,db \
-		--tags deploy \
-		ansible/playbook.yml
+	@ansible-playbook -l webapp,db ansible/deploy.yml
 
 .PHONY: bench
 bench:
 	@open https://portal.isucon.net/
+
+.PHONY: post-bench
+post-bench:
+	@$(MAKE) access.jsonl.gz slow.log.gz
 
 .PHONY: access.jsonl.gz
 access.jsonl.gz:
@@ -68,9 +58,10 @@ alp:
 
 .PHONY: slow.log.gz
 slow.log.gz:
-	@ssh -F .ssh/config $(DB) "sudo gzip -k --best /var/log/mysql/slow.log"
+	@ssh -F .ssh/config $(DB) "sudo gzip -f -k --best /var/log/mysql/slow.log"
 	@$(RSYNC) $(DB):/var/log/mysql/$@ .
 	@aws s3 cp $@ s3://$(LOG_BUCKET)/logs/mysql/$(shell gdate --iso-8601=seconds).log.gz
+	@ssh $(DB) "sudo truncate --size 0 /var/log/mysql/slow.log"
 
 .PHONY: pt-query-digest
 pt-query-digest:

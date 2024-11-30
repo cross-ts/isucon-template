@@ -7,15 +7,9 @@
     use_ssh_args: true
     delete: false
   #notify: restart webapp
-  tags:
-    - deploy
-    - never
 
 #- name: Composer install
 #  become: false
 #  command:
 #    cmd: composer install --no-dev --optimize-autoloader
 #    chdir: "/home/{{ isucon_user }}/webapp/php"
-#  tags:
-#    - deploy
-#    - never

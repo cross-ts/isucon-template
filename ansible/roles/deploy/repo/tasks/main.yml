@@ -3,9 +3,6 @@
     cmd: git remote get-url origin
   become: false
   register: git_remote_url
-  tags:
-    - init
-    - never
 
 - git:
     repo: "{{ git_remote_url.stdout }}"
@@ -13,6 +10,3 @@
     accept_hostkey: true
   become: false
   become_flags: "--preserve-env=SSH_AUTH_SOCK"
-  tags:
-    - init
-    - never

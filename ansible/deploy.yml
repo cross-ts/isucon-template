@@ -10,23 +10,6 @@
       set_fact:
         isucon_user: "{{ isucon_user.stdout }}"
 
-- hosts: init
-  become: true
-  roles:
-    - install/alp
-    - install/git
-    - install/htop
-    - install/mysqldef
-    - install/percona-toolkit
-    - install/tig
-    - install/valkey
-    - setting/disable-apparmor
-    - setting/disable-selinux
-    - deploy/repo
-    - deploy/nginx
-    - deploy/mysql
-    - deploy/webapp
-
 - hosts: webapp
   become: true
   roles:

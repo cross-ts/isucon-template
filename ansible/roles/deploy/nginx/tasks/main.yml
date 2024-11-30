@@ -6,7 +6,3 @@
     use_ssh_args: true
     delete: false
   notify: reload nginx
-  tags:
-    - init
-    - deploy
-    - never
