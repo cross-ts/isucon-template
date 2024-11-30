@@ -3,23 +3,30 @@ default: help
 help:
 	@echo "TODO: Write help message"
 
-#################
-# Prepare Tasks #
-#################
-cdk/node_modules:
-	@cd cdk && npm ci
+###############
+# Preparation #
+###############
+LOG_BUCKET = $(shell aws cloudformation describe-stacks --stack-name ProfilerStack --query 'Stacks[0].Outputs[?ExportName==`LogBucketName`].OutputValue' --output text)
 
-.PHONY: prepare
-.ONESHELL: prepare
-prepare: cdk/node_modules
+.PHONY: cdk-deploy
+.ONESHELL: cdk-deploy
+cdk-deploy:
 	@cd cdk
-	@npx cdk deploy --require-approval never
+	@npx cdk deploy \
+		--require-approval never \
+		--no-lookups
 
-.PHONY: prepare-destructive
-.ONESHELL: prepare-destructive
-prepare-destructive: cdk/node_modules
+.PHONY: cdk-destroy
+.ONESHELL: cdk-destroy
+cdk-destroy:
 	@cd cdk
-	@npx cdk destroy --force
+	@npx cdk destroy \
+		--require-approval never \
+		--no-lookups
+
+.PHONY: debug
+debug:
+	@echo $(LOG_BUCKET)
 
 ###############
 # Setup Tasks #
@@ -52,6 +59,8 @@ bench:
 .PHONY: access.jsonl.gz
 access.jsonl.gz:
 	@$(RSYNC) $(WEBAPP):/var/log/nginx/$@ .
+	@aws s3 cp $@ s3://$(LOG_BUCKET)/logs/nginx/$(shell gdate --iso-8601=seconds).jsonl.gz
+	@ssh $(WEBAPP) "sudo truncate --size 0 /var/log/nginx/$@"
 
 .PHONY: alp
 alp:
@@ -61,7 +70,8 @@ alp:
 slow.log.gz:
 	@ssh -F .ssh/config $(DB) "sudo gzip -k --best /var/log/mysql/slow.log"
 	@$(RSYNC) $(DB):/var/log/mysql/$@ .
+	@aws s3 cp $@ s3://$(LOG_BUCKET)/logs/mysql/$(shell gdate --iso-8601=seconds).log.gz
 
 .PHONY: pt-query-digest
 pt-query-digest:
-	@gzcat slow.log.gz | pt-query-digest --output json | tail -n +2
+	@gzcat slow.log.gz | pt-query-digest
