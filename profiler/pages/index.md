@@ -15,8 +15,8 @@ title: Dashboard
   <Column id="count" title="Count" contentType=bar/>
   <Column id="sum_time" title="Sum Time" contentType=colorscale scaleColor={['#6db678','#ebbb38','#ce5050']}/>
   <Column id="avg_time" title="Avg Time" contentType=colorscale scaleColor={['#6db678','#ebbb38','#ce5050']}/>
-  <Column id="sum_body_size" title="Sum Body Size" contentType=colorscale scaleColor={['#6db678','#ebbb38','#ce5050']}/>
-  <Column id="avg_body_size" title="Avg Body Size" contentType=colorscale scaleColor={['#6db678','#ebbb38','#ce5050']}/>
+  <Column id="sum_body_size" title="Sum Body Size" contentType=colorscale scaleColor={['#6db678','#ebbb38','#ce5050']} fmt='[<1000000]0.00," KB";[<1000000000]0.00,," MB"'/>
+  <Column id="avg_body_size" title="Avg Body Size" contentType=colorscale scaleColor={['#6db678','#ebbb38','#ce5050']} fmt='[<1000000]0.00," KB";[<1000000000]0.00,," MB"'/>
   <Column id="200" title="2xx" contentType=colorscale scaleColor=blue/>
   <Column id="300" title="3xx" contentType=colorscale scaleColor=blue/>
   <Column id="400" title="4xx" contentType=colorscale scaleColor=blue/>
