@@ -23,20 +23,37 @@ select *, '<b>' || path || '</b>' as b_path from local.alp
   <Column id="500" title="5xx" contentType=colorscale scaleColor=red/>
 </DataTable>
 
-## MySQL Profile
+## Slow Log Profile
 
 ```sql slowlogs
-select * from local.last_slow_logs
+select
+  '<b>' || distillate || '</b>' as b_distillate,
+  fingerprint,
+  query_count::int as query_count,
+  sum::float as sum,
+  avg::float as avg,
+  min::float as min,
+  max::float as max,
+  median::float as median,
+  pct_95::float as pct_95,
+  stddev::float as stddev,
+  label
+from local.last_slow_logs
+order by sum desc
 ```
 
-<DataTable data={slowlogs} rows=all/>
-
-## What's Next?
-- [Connect your data sources](settings)
-- Edit/add markdown files in the `pages` folder
-- Deploy your project with [Evidence Cloud](https://evidence.dev/cloud)
-
-## Get Support
-- Message us on [Slack](https://slack.evidence.dev/)
-- Read the [Docs](https://docs.evidence.dev/)
-- Open an issue on [Github](https://github.com/evidence-dev/evidence)
+{#each ['query_time', 'rows_examined', 'rows_sent', 'lock_time', 'query_length'] as label}
+## {label}
+<DataTable data={slowlogs.where(`label='${label}'`)} rows=all>
+  <Column id="b_distillate" title="Distillate" contentType=html/>
+  <Column id="query_count" title="Count" contentType=bar/>
+  <Column id="sum" title="Sum" contentType=colorscale scaleColor={['#6db678','#ebbb38','#ce5050']}/>
+  <Column id="avg" title="Avg" contentType=colorscale scaleColor={['#6db678','#ebbb38','#ce5050']}/>
+  <Column id="min" title="Min" contentType=colorscale scaleColor={['#6db678','#ebbb38','#ce5050']}/>
+  <Column id="max" title="Max" contentType=colorscale scaleColor={['#6db678','#ebbb38','#ce5050']}/>
+  <Column id="median" title="Median" contentType=colorscale scaleColor={['#6db678','#ebbb38','#ce5050']}/>
+  <Column id="pct_95" title="P95" contentType=colorscale scaleColor={['#6db678','#ebbb38','#ce5050']}/>
+  <Column id="stddev" title="Stddev" />
+  <Column id="fingerprint" title="Fingerprint" />
+</DataTable>
+{/each}

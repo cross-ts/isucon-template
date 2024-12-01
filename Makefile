@@ -22,6 +22,10 @@ deploy:
 bench:
 	@open https://portal.isucon.net/
 
+.PHONY: post-bench
+post-bench:
+	@$(MAKE) logs profile
+
 ##################
 # Logs: Download #
 ##################
@@ -56,7 +60,7 @@ DUCKDB_FILE := profiler/sources/local/local.duckdb
 access.jsonl.gz: logs/nginx/*.jsonl.gz
 	@cp $(LAST_NGINX_LOG_FILE) ${@}
 
-$(DUCKDB_FILE): duckdb/macros.sql access.jsonl.gz slow.jsonl.gz
+$(DUCKDB_FILE): access.jsonl.gz slow.jsonl.gz duckdb/macros.sql duckdb/last_access_logs.sql duckdb/last_slow_logs.sql
 	@duckdb $(DUCKDB_FILE) \
 		-s "$(shell cat duckdb/macros.sql)" \
 		-s "$(shell cat duckdb/last_access_logs.sql)" \
