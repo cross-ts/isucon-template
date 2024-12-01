@@ -1,3 +1,5 @@
 - dnf:
-    name: git
+    name:
+      - git
+      - gh
     state: present
