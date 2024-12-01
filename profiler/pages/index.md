@@ -6,7 +6,7 @@ title: Dashboard
 ## Access Log Profile
 
 ```sql alp
-  select *, '<b>' || path || '</b>' as b_path from local.alp
+select *, '<b>' || path || '</b>' as b_path from local.alp
 ```
 
 <DataTable data={alp} rows=all rowShading=true>
@@ -22,6 +22,14 @@ title: Dashboard
   <Column id="400" title="4xx" contentType=colorscale scaleColor=blue/>
   <Column id="500" title="5xx" contentType=colorscale scaleColor=red/>
 </DataTable>
+
+## MySQL Profile
+
+```sql slowlogs
+select * from local.last_slow_logs
+```
+
+<DataTable data={slowlogs} rows=all/>
 
 ## What's Next?
 - [Connect your data sources](settings)

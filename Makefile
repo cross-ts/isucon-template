@@ -38,6 +38,8 @@ nginx-log:
 mysql-log:
 	@ssh -F .ssh/config $(DB) "sudo gzip -f -k --best $(MYSQL_LOG_FILE)"
 	@$(RSYNC) $(DB):$(MYSQL_LOG_FILE).gz ./logs/mysql/$(shell gdate --iso-8601=seconds).log.gz
+	@$(MAKE) slow.jsonl.gz
+	@cp slow.jsonl.gz logs/mysql/$(NOW).jsonl.gz
 	@ssh $(DB) "sudo truncate --size 0 $(MYSQL_LOG_FILE)"
 
 .PHONY: logs
@@ -48,15 +50,17 @@ logs: nginx-log mysql-log
 #################
 LAST_NGINX_LOG_FILE = $(shell ls logs/nginx/*.jsonl.gz | tail -n 1)
 LAST_MYSQL_LOG_FILE = $(shell ls logs/mysql/*.log.gz | tail -n 1)
+LAST_SLOW_LOG_FILE = $(shell ls logs/mysql/*.jsonl.gz | tail -n 1)
 DUCKDB_FILE := profiler/sources/local/local.duckdb
 
 access.jsonl.gz: logs/nginx/*.jsonl.gz
 	@cp $(LAST_NGINX_LOG_FILE) ${@}
 
-$(DUCKDB_FILE): duckdb/macros.sql access.jsonl.gz
+$(DUCKDB_FILE): duckdb/macros.sql access.jsonl.gz slow.jsonl.gz
 	@duckdb $(DUCKDB_FILE) \
 		-s "$(shell cat duckdb/macros.sql)" \
-		-s "$(shell cat duckdb/last_access_logs.sql)"
+		-s "$(shell cat duckdb/last_access_logs.sql)" \
+		-s "$(shell cat duckdb/last_slow_logs.sql)"
 
 .PHONY: alp
 alp: $(DUCKDB_FILE)
@@ -68,6 +72,14 @@ slow.log: logs/mysql/*.log.gz
 	@cp $(LAST_MYSQL_LOG_FILE) ${@}.gz
 	@gzip -d -f ${@}.gz
 
+slow.jsonl.gz: slow.log
+	@pt-query-digest slow.log \
+		--group-by fingerprint \
+		--filter 'length($$event->{arg}) <= 1000' \
+		--output json | \
+	jq -c '.classes[]' | \
+	gzip -c > ${@}
+
 .PHONY: pt
 pt: slow.log
 	@pt-query-digest slow.log
@@ -76,7 +88,8 @@ pt: slow.log
 .ONESHELL: profile
 profile: $(DUCKDB_FILE)
 	@duckdb $(DUCKDB_FILE) \
-		-s "$(shell cat duckdb/all_access_logs.sql)"
+		-s "$(shell cat duckdb/all_access_logs.sql)" \
+		-s "$(shell cat duckdb/all_slow_logs.sql)"
 	@cd profiler
 	@npm run sources
 	@npm run dev
