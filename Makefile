@@ -48,17 +48,21 @@ logs: nginx-log mysql-log
 #################
 LAST_NGINX_LOG_FILE = $(shell ls logs/nginx/*.jsonl.gz | tail -n 1)
 LAST_MYSQL_LOG_FILE = $(shell ls logs/mysql/*.log.gz | tail -n 1)
-DUCKDB_FILE := duckdb/local.duckdb
-
-$(DUCKDB_FILE): duckdb/schema.sql
-	@duckdb $(DUCKDB_FILE) -s "$(shell cat duckdb/schema.sql)"
+DUCKDB_FILE := profiler/sources/local/local.duckdb
 
 access.jsonl.gz: logs/nginx/*.jsonl.gz
 	@cp $(LAST_NGINX_LOG_FILE) ${@}
 
+$(DUCKDB_FILE): duckdb/macros.sql access.jsonl.gz
+	@duckdb $(DUCKDB_FILE) \
+		-s "$(shell cat duckdb/macros.sql)" \
+		-s "$(shell cat duckdb/last_access_logs.sql)"
+
 .PHONY: alp
-alp: $(DUCKDB_FILE) duckdb/alp.sql access.jsonl.gz
-	@duckdb $(DUCKDB_FILE) -s "$(shell cat duckdb/alp.sql)"
+alp: $(DUCKDB_FILE)
+	@duckdb $(DUCKDB_FILE) \
+		--readonly \
+		-s "$(shell cat profiler/sources/local/alp.sql)"
 
 slow.log: logs/mysql/*.log.gz
 	@cp $(LAST_MYSQL_LOG_FILE) ${@}.gz
@@ -67,3 +71,12 @@ slow.log: logs/mysql/*.log.gz
 .PHONY: pt
 pt: slow.log
 	@pt-query-digest slow.log
+
+.PHONY: profile
+.ONESHELL: profile
+profile: $(DUCKDB_FILE)
+	@duckdb $(DUCKDB_FILE) \
+		-s "$(shell cat duckdb/all_access_logs.sql)"
+	@cd profiler
+	@npm run sources
+	@npm run dev
