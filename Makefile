@@ -3,26 +3,6 @@ default: help
 help:
 	@echo "TODO: Write help message"
 
-###############
-# Preparation #
-###############
-LOG_BUCKET = $(shell aws cloudformation describe-stacks --stack-name ProfilerStack --query 'Stacks[0].Outputs[?ExportName==`LogBucketName`].OutputValue' --output text)
-.PHONY: cdk-deploy
-.ONESHELL: cdk-deploy
-cdk-deploy:
-	@cd cdk
-	@npx cdk deploy \
-		--require-approval never \
-		--no-lookups
-
-.PHONY: cdk-destroy
-.ONESHELL: cdk-destroy
-cdk-destroy:
-	@cd cdk
-	@npx cdk destroy \
-		--require-approval never \
-		--no-lookups
-
 ##########
 # ISUCON #
 ##########
